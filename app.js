@@ -8,9 +8,26 @@ const drugsRouter = require('./routes/drugs');
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
 
-mongoose.connect(MONGO_URI)
-  .then(() => console.log('Connected to MongoDB Atlas'))
-  .catch(err => console.error('MongoDB connection error:', err));
+// Cache the connection across serverless invocations
+let isConnected = false;
+
+async function connectDB() {
+  if (isConnected && mongoose.connection.readyState === 1) return;
+  await mongoose.connect(MONGO_URI);
+  isConnected = true;
+  console.log('Connected to MongoDB Atlas');
+}
+
+// Ensure DB is connected before every request
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('MongoDB connection error:', err);
+    res.status(500).json({ error: 'Database connection failed' });
+  }
+});
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());

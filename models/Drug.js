@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema; 
+const Schema = mongoose.Schema;
 
 const drugSchema = new Schema({
   name: String,
@@ -10,5 +10,7 @@ const drugSchema = new Schema({
   form: String
 });
 
-module.exports = mongoose.model('Drug', drugSchema);
+// Text index for fast, case-insensitive search on name
+drugSchema.index({ name: 'text' });
 
+module.exports = mongoose.model('Drug', drugSchema);

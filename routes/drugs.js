@@ -10,12 +10,18 @@ router.get('/', async (req, res) => {
 // Search route
 router.get('/search', async (req, res) => {
   const query = req.query.q;
+
+  if (!query || query.trim() === '') {
+    return res.json([]);
+  }
+
   try {
     const results = await Drug.find({
-      name: { $regex: query, $options: 'i' } // case-insensitive partial match
+      name: { $regex: query.trim(), $options: 'i' }
     });
-    res.json(results); // returns full drug objects
+    res.json(results);
   } catch (err) {
+    console.error('Search error:', err);
     res.status(500).json({ error: 'Search failed' });
   }
 });
