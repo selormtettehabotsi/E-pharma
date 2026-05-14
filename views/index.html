@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>E-Pharma | Drug Prices in Ghana</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="navbar">
+    <a href="/" class="nav-logo">
+      <img src="/logo.png" alt="E-Pharma" />
+    
+    </a>
+    <a href="/nhis-prices.pdf" target="_blank" class="nav-cta">NHIS Drug List</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="badge">🇬🇭 Ghana's Drug Price Database</div>
+      <h1>Find the <span class="highlight">Right Price</span><br/>for your medication</h1>
+      <p class="hero-sub">Transparent, NHIS-approved pricing for drugs across Ghana — no more overpaying.</p>
+
+      <div class="search-box">
+        <div class="search-input-wrap">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchInput" placeholder="Search a drug — e.g. Paracetamol, Amoxicillin…" autocomplete="off" />
+          <button class="clear-btn" id="clearBtn" onclick="clearSearch()">✕</button>
+        </div>
+        <button class="search-submit" onclick="searchDrug(null, true)">Search</button>
+      </div>
+
+      <div class="popular-tags">
+        <span>Popular:</span>
+        <button onclick="quickSearch('Paracetamol')">Paracetamol</button>
+        <button onclick="quickSearch('Amoxicillin')">Amoxicillin</button>
+        <button onclick="quickSearch('Acyclovir')">Acyclovir</button>
+        <button onclick="quickSearch('Eliquis')">Eliquis</button>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-card">
+        <span class="stat-num">500+</span>
+        <span class="stat-label">Drugs listed</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">NHIS</span>
+        <span class="stat-label">Approved prices</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num">Free</span>
+        <span class="stat-label">Always free to use</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULTS -->
+  <section class="results-section" id="resultsSection" style="display:none;">
+    <div class="results-header">
+      <h2 id="resultsTitle">Results</h2>
+      <span id="resultsCount" class="results-count"></span>
+    </div>
+    <div id="results" class="results-grid"></div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how-it-works">
+    <h2>How it works</h2>
+    <div class="steps">
+    <div class="step">
+      <div class="step-icon">
+        <svg width="38" height="38" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="7.5" stroke="currentColor" stroke-width="2.2"/>
+          <line x1="18" y1="18" x2="25" y2="25" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        </svg>
+      </div>
+        <h3>Search</h3>
+        <p>Type any drug name — generic or brand — and get results instantly.</p>
+    </div>
+    <div class="step">
+      <div class="step-icon">
+        <svg width="38" height="38" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <line x1="14" y1="4" x2="14" y2="24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="5" y1="24" x2="23" y2="24" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="14" y1="6" x2="5" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="14" y1="6" x2="23" y2="10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M3 10 Q5 15 7 10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <path d="M21 10 Q23 15 25 10" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+        <h3>Compare</h3>
+        <p>See the form, strength, and official NHIS price for every match.</p>
+    </div>
+    <div class="step">
+      <div class="step-icon">
+        <svg width="38" height="38" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="3" width="20" height="22" rx="3" stroke="currentColor" stroke-width="2.2"/>
+          <line x1="9" y1="9" x2="19" y2="9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="9" y1="13" x2="19" y2="13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <polyline points="9,18 12,21 19,17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+        <h3>Know your rights</h3>
+        <p>Walk into any pharmacy armed with the correct price. Never overpay again.</p>
+      </div>
+    </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        
+        <span>E-Pharma</span>
+        <p>Prices you can trust.</p>
+      </div>
+      <div class="footer-links">
+        <a href="/nhis-prices.pdf" target="_blank">Full NHIS Drug List</a>
+        <a href="/about">About</a>
+        <a href="/privacy">Privacy Policy</a>
+      </div>
+    </div>
+    <p class="footer-copy">© 2025 E-Pharma · Prices based on NHIS approved rates.</p>
+  </footer>
+
+  <script src="/script.js"></script>
+</body>
+</html>
