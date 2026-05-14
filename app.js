@@ -27,4 +27,9 @@ app.get('/privacy', (req, res) => {
   res.sendFile(__dirname + '/views/privacy.html');
 });
 
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+// Local development
+if (process.env.NODE_ENV !== 'production') {
+  app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+}
+
+module.exports = app;
