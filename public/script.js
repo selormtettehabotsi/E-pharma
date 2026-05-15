@@ -39,16 +39,18 @@ searchInput.addEventListener('input', (e) => {
 
 // Scroll to results on Enter
 searchInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    const query = searchInput.value.trim();
-    if (query) {
-      const filtered = allDrugs.filter(drug =>
-        drug.name.toLowerCase().includes(query.toLowerCase())
-      );
-      displayResults(filtered, query, true);
-    }
-  }
+  if (e.key === 'Enter') searchDrug(null, true);
 });
+
+// Search button handler — filters and scrolls down to results
+function searchDrug(query, scroll = true) {
+  const q = query || searchInput.value.trim();
+  if (!q) return;
+  const filtered = allDrugs.filter(drug =>
+    drug.name.toLowerCase().includes(q.toLowerCase())
+  );
+  displayResults(filtered, q, scroll);
+}
 
 // Clear search
 function clearSearch() {
