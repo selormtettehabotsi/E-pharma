@@ -5,20 +5,49 @@ const resultsGrid = document.getElementById('results');
 const resultsTitle = document.getElementById('resultsTitle');
 const resultsCount = document.getElementById('resultsCount');
 
-// Live search as user types — no scrolling while typing
+// All drugs loaded once on page load
+let allDrugs = [];
+
+// Fetch all drugs from server once
+async function loadAllDrugs() {
+  try {
+    const res = await fetch('/drugs');
+    if (!res.ok) throw new Error('Failed to load drugs');
+    allDrugs = await res.json();
+  } catch (err) {
+    console.error('Could not preload drugs:', err);
+  }
+}
+
+// Start loading immediately
+loadAllDrugs();
+
+// Live filter as user types — instant, no network requests
 searchInput.addEventListener('input', (e) => {
   const query = e.target.value.trim();
   clearBtn.classList.toggle('visible', query.length > 0);
-  if (query.length > 1) {
-    searchDrug(query, false); // false = don't scroll
-  } else if (query.length === 0) {
+
+  if (query.length === 0) {
     hideResults();
+  } else if (query.length >= 1) {
+    const filtered = allDrugs.filter(drug =>
+      drug.name.toLowerCase().includes(query.toLowerCase())
+    );
+    displayResults(filtered, query, false);
   }
 });
 
-// Search on Enter key — scroll to results
+// Scroll to results on Enter
 searchInput.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') searchDrug(null, true);
+  if (e.key === 'Enter') {
+    const query = searchInput.value.trim();
+    if (query) {
+      const filtered = allDrugs.filter(drug =>
+        drug.name.toLowerCase().includes(query.toLowerCase())
+      );
+      displayResults(filtered, query, true);
+    }
+  }
 });
 
 // Clear search
@@ -33,25 +62,10 @@ function clearSearch() {
 function quickSearch(term) {
   searchInput.value = term;
   clearBtn.classList.add('visible');
-  searchDrug(term, true);
-}
-
-// Main search function
-// scroll = true  → scroll to results after rendering (explicit submit / popular tag)
-// scroll = false → just update results in place (live typing)
-async function searchDrug(query, scroll = false) {
-  const q = query || searchInput.value.trim();
-  if (!q) return;
-
-  try {
-    const res = await fetch(`/drugs/search?q=${encodeURIComponent(q)}`);
-    if (!res.ok) throw new Error('Network error');
-    const data = await res.json();
-    displayResults(data, q, scroll);
-  } catch (err) {
-    console.error('Search failed:', err);
-    displayResults([], q, scroll);
-  }
+  const filtered = allDrugs.filter(drug =>
+    drug.name.toLowerCase().includes(term.toLowerCase())
+  );
+  displayResults(filtered, term, true);
 }
 
 // Render results
@@ -71,7 +85,7 @@ function displayResults(drugs, query, scroll = false) {
     resultsGrid.innerHTML = `
       <div class="no-results">
         <div style="font-size:2rem;margin-bottom:.5rem">💊</div>
-        <strong>No drugs found for "${query}"</strong>
+        <strong>No drugs found for "${escHtml(query)}"</strong>
         <p style="margin-top:.4rem;font-size:.9rem">Try a different name or check the full NHIS list.</p>
       </div>`;
     return;
